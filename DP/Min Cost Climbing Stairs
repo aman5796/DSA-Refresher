@@ -1,0 +1,24 @@
+# Memoized solution
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        dp = [-1] * len(cost)
+        return min(self.get_cost(cost, 0, dp), self.get_cost(cost, 1, dp))
+
+    def get_cost(self, arr, index, dp) -> int:
+        if(index >= len(arr)):
+            return 0
+        if (-1 != dp[index]):
+            return dp[index]
+        dp[index] = arr[index] + min(self.get_cost(arr, index+1, dp), self.get_cost(arr, index+2, dp))
+        return dp[index]
+
+# Tabular Solution
+class Solution:
+    def minCostClimbingStairs(self, cost: List[int]) -> int:
+        dp = [0] * len(cost)
+        for i in range(0,len(cost)):
+            if i < 2:
+                dp[i] = cost[i]
+            else:
+                dp[i] = cost[i] + min(dp[i-1], dp[i-2])
+        return min(dp[-1], dp[-2])
