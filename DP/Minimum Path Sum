@@ -1,0 +1,12 @@
+class Solution:
+    def minPathSum(self, grid: List[List[int]]) -> int:
+        row = len(grid)
+        col = len(grid[0])
+        dp = [[0]*col] * row
+        for i in range(0,row):
+            for j in range(0,col):
+                left_val = dp[i][j-1] if j-1>= 0 else inf
+                up_val = dp[i-1][j] if i-1 >= 0 else inf
+                min_val = min(left_val,up_val)
+                dp[i][j] = grid[i][j] + (min_val if min_val != inf else 0)
+        return dp[-1][-1]
