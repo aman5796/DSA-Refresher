@@ -1,0 +1,17 @@
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        dp = {}
+        ans = self._min_coins(coins, amount, 0, dp)
+        return ans if ans != float('inf') else -1
+
+    def _min_coins(self, coins, amount, indx, dp):
+        if amount == 0:
+            return 0
+        if amount < 0 or indx == len(coins):
+            return float('inf')
+        if (amount, indx) in dp:
+            return dp[(amount, indx)]
+        take = 1 + self._min_coins(coins, amount - coins[indx], indx, dp)
+        skip = self._min_coins(coins, amount, indx + 1, dp)
+        dp[(amount, indx)] = min(take, skip)
+        return dp[(amount, indx)]
