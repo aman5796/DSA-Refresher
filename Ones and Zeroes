@@ -1,0 +1,31 @@
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        count_arr = []
+        for s in strs:
+            count_arr.append(self._get_zeros_and_ones(s))
+        dp = [[[-1 for _ in range(n+1)] for _ in range(m+1)] for _ in range(len(strs)+1)]
+        return self._get_max_subset(count_arr,0,m,n,dp)
+
+    def _get_zeros_and_ones(self, s):
+        z = 0
+        o = 0
+        for ch in s:
+            if ch == '1':
+                o = o + 1
+            if ch == '0':
+                z = z + 1
+        return [z,o]
+
+    def _get_max_subset(self, count_arr, indx, m, n, dp):
+        if indx >= len(count_arr):
+            return 0
+        if m<0 or n<0:
+            return 0
+        if dp[indx][m][n] != -1:
+            return dp[indx][m][n]
+        skip = self._get_max_subset(count_arr,indx+1,m,n,dp)
+        include = 0
+        if count_arr[indx][0] <= m and count_arr[indx][1] <= n:
+            include = 1 + self._get_max_subset(count_arr,indx+1,m-count_arr[indx][0],n-count_arr[indx][1],dp)
+        dp[indx][m][n] = max(skip,include)
+        return dp[indx][m][n]
