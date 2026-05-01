@@ -1,3 +1,4 @@
+# Memoized code
 class Solution:
     def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
         count_arr = []
@@ -29,3 +30,31 @@ class Solution:
             include = 1 + self._get_max_subset(count_arr,indx+1,m-count_arr[indx][0],n-count_arr[indx][1],dp)
         dp[indx][m][n] = max(skip,include)
         return dp[indx][m][n]
+    
+# Tabular Code
+class Solution:
+    def findMaxForm(self, strs: List[str], m: int, n: int) -> int:
+        count_arr = []
+        for s in strs:
+            count_arr.append(self._get_zeros_and_ones(s))
+        dp = [[[0 for _ in range(n+1)] for _ in range(m+1)] for _ in range(len(strs)+1)]
+        for indx in range(len(strs)-1,-1,-1):
+            z, o = count_arr[indx]
+            for i in range(0,m+1):
+                for j in range(0,n+1):
+                    skip = dp[indx+1][i][j]
+                    include = 0
+                    if i >= z and j >= o:
+                        include = 1 + dp[indx+1][i-z][j-o]
+                    dp[indx][i][j] = max(skip, include)
+        return dp[0][m][n]
+
+    def _get_zeros_and_ones(self, s):
+        z = 0
+        o = 0
+        for ch in s:
+            if ch == '1':
+                o = o + 1
+            if ch == '0':
+                z = z + 1
+        return [z,o]
