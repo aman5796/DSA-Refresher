@@ -1,0 +1,46 @@
+# memo code
+class Solution:
+    def minSteps(self, n: int) -> int:
+        if n == 1:
+            return 0
+        
+        dp = [[-1 for _ in range(n+1)] for _ in range(n+1)]
+        return self._get_min_ops(n, 0, 1, dp)
+    
+    def _get_min_ops(self, n, copied, curr, dp):
+        if curr == n:
+            return 0
+        if curr > n:
+            return inf
+        if dp[copied][curr] != -1:
+            return dp[copied][curr]
+        copy = inf
+        if curr > 0:
+            copy = 2 + self._get_min_ops(n, curr, curr * 2, dp)
+        paste = inf
+        if copied > 0:
+            paste = 1 + self._get_min_ops(n, copied, curr + copied, dp)
+        dp[copied][curr] = min(copy, paste)
+        return dp[copied][curr]
+    
+# Tabular Code
+from math import inf
+
+class Solution:
+    def minSteps(self, n: int) -> int:
+        if n == 1:
+            return 0
+        dp = [[-1 for _ in range(n+1)] for _ in range(n+1)]
+        for i in range(n+1):
+            dp[i][n] = 0
+        for curr in range(n-1, 0, -1):
+            for copied in range(n+1):
+                copy = inf
+                if curr <= n and 2 * curr <= n:
+                    copy = 2 + dp[curr][2 * curr]
+                paste = inf
+                if copied > 0 and curr + copied <= n:
+                    paste = 1 + dp[copied][curr + copied]
+                dp[copied][curr] = min(copy, paste)
+        
+        return dp[0][1]
