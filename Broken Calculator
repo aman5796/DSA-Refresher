@@ -1,0 +1,30 @@
+# Recursive code
+class Solution:
+    def brokenCalc(self, startValue: int, target: int) -> int:
+        if target <= startValue:
+            return startValue - target
+        desired = target+1 if target%2==1 else target//2
+        return 1+self._get_min_steps(startValue,desired)
+    
+    def _get_min_steps(self,curr_val,desired):
+        if desired == curr_val:
+            return 0
+        subtract = 0
+        if desired < curr_val:
+            subtract = 1+self._get_min_steps(curr_val-1,desired)
+        multiply = 0
+        if desired > curr_val:
+            multiply = 1+ self._get_min_steps(curr_val*2,desired)
+        return subtract + multiply
+        
+# Iterative Code
+class Solution:
+    def brokenCalc(self, startValue: int, target: int) -> int:
+        ans = 0
+        while(target > startValue):
+            ans = ans + 1
+            if(target%2 == 1):
+                target = target + 1
+            else:
+                target = target//2
+        return ans + startValue - target
