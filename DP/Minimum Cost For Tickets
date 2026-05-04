@@ -1,0 +1,16 @@
+# Memoized Code
+class Solution:
+    def mincostTickets(self, days: List[int], costs: List[int]) -> int:
+        dp = [-1] * (len(days)+1)
+        return self._get_min_cost(days,costs,0,dp)
+
+    def _get_min_cost(self,days,cost,indx,dp):
+        if indx >= len(days):
+            return 0
+        if dp[indx] != -1:
+            return dp[indx]
+        one_day_cost = cost[0] + self._get_min_cost(days,cost,bisect.bisect_right(days,days[indx]),dp)
+        one_week_cost = cost[1] + self._get_min_cost(days,cost,bisect.bisect_right(days,days[indx]+6),dp)
+        one_month_cost = cost[2] + self._get_min_cost(days,cost,bisect.bisect_right(days,days[indx]+29),dp)
+        dp[indx] = min(one_day_cost, one_week_cost, one_month_cost)
+        return dp[indx]
