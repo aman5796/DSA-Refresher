@@ -1,0 +1,31 @@
+# Memoized Code
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        dp = [-1 for i in range(n+1)]
+        return self._get_num_ways(n,0,dp)
+
+    def _get_num_ways(self, target, current, dp):
+        if current > target:
+            return 0
+        if current == target:
+            return 1
+        if dp[current] != -1:
+            return dp[current]
+        one_step = self._get_num_ways(target,current+1,dp)
+        two_steps = self._get_num_ways(target,current+2,dp)
+        ans = one_step + two_steps
+        dp[current] = ans
+        return dp[current]
+    
+# Tabular Code
+class Solution:
+    def climbStairs(self, n: int) -> int:
+        dp = [0 for i in range(n+2)]
+        for i in range(n+1,-1,-1):
+            if i == n:
+                dp[i] = 1
+            elif i > n:
+                dp[i] = 0
+            else:
+                dp[i] = dp[i+1] + dp[i+2]
+        return dp[0]
