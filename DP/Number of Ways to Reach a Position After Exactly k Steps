@@ -1,0 +1,32 @@
+# Memoized Code
+class Solution:
+    def numberOfWays(self, startPos: int, endPos: int, k: int) -> int:
+        dp = [[-1 for i in range(k+1)] for i in range(endPos+startPos+k+1)]
+        return self._get_num_ways(endPos,startPos,k,dp)
+    
+    def _get_num_ways(self,target,current,k,dp):
+        if current == target and k==0:
+            return 1
+        if k<=0 or abs(target - current) > k:
+            return 0
+        if dp[current][k] != -1:
+            return dp[current][k]
+        left = self._get_num_ways(target,current-1,k-1,dp)
+        right = self._get_num_ways(target,current+1,k-1,dp)
+        ans = ((left + right)%1000000007)
+        dp[current][k] = ans
+        return dp[current][k]
+    
+# Tabular Code
+class Solution:
+    def numberOfWays(self, startPos: int, endPos: int, k: int) -> int:
+        mod=10**9+7
+        if k< abs(startPos-endPos):
+            return 0
+        dp= [[0 for _ in range(startPos-k , startPos+k+1)] for __ in range(k+1)]
+        dp[0][endPos+k-startPos] = 1
+        for i in range(1,k+1):
+            for j in range(startPos-k+1 , startPos+k):
+                x = j+k-startPos
+                dp[i][x] = dp[i-1][x+1] +  dp[i-1][x-1]
+        return dp[k][k]%mod
