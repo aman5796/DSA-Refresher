@@ -1,0 +1,30 @@
+# Memoized Solution
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        dp = [-1]*(target+1)
+        return self._num_ways(nums,target,dp)
+
+    def _num_ways(self,nums,target,dp):
+        if target == 0:
+            return 1
+        if target < 0:
+            return 0
+        if dp[target] != -1:
+            return dp[target]
+        ans = 0
+        for num in nums:
+            ans += self._num_ways(nums,target-num,dp)
+        dp[target] = ans
+        return dp[target]
+
+# Tabular Code
+class Solution:
+    def combinationSum4(self, nums: List[int], target: int) -> int:
+        dp = [0]*(target+1)
+        dp[0] = 1
+        ans = 0
+        for i in range(target+1):
+            for num in nums:
+                if i-num>=0:
+                    dp[i] += dp[i-num]
+        return dp[target]
