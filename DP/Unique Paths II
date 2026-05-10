@@ -1,0 +1,49 @@
+# Memoized Solution
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        if obstacleGrid[0][0] == 1 or obstacleGrid[-1][-1] == 1:
+            return 0
+        dp = [[-1 for i in range(len(obstacleGrid[0]))] for j in range(len(obstacleGrid))]
+        return self._get_num_paths(obstacleGrid,0,0,dp)
+
+    def _get_num_paths(self,arr,i,j,dp):
+        rows = len(arr)
+        cols = len(arr[0])
+        if i>=rows or j>=cols:
+            return 0
+        if i==rows-1 and j==cols-1:
+            return 1
+        if dp[i][j] != -1:
+            return dp[i][j]
+        right = 0
+        if j+1<cols and arr[i][j+1] != 1:
+            right = self._get_num_paths(arr,i,j+1,dp)
+        bottom = 0
+        if i+1<rows and arr[i+1][j] != 1:
+            bottom = self._get_num_paths(arr,i+1,j,dp)
+        ans = right + bottom
+        dp[i][j] = ans
+        return dp[i][j]
+        
+# Tabular Code
+class Solution:
+    def uniquePathsWithObstacles(self, obstacleGrid: List[List[int]]) -> int:
+        if obstacleGrid[0][0] == 1 or obstacleGrid[-1][-1] == 1:
+            return 0
+        dp = [[0 for i in range(len(obstacleGrid[0]))] for j in range(len(obstacleGrid))]
+        dp[-1][-1] = 1
+        rows = len(obstacleGrid)
+        cols = len(obstacleGrid[0])
+        for i in range(rows-1,-1,-1):
+            for j in range(cols-1,-1,-1):
+                if i==rows-1 and j==cols-1:
+                    continue
+                right = 0
+                if j+1<cols and obstacleGrid[i][j+1] != 1:
+                    right = dp[i][j+1]
+                bottom = 0
+                if i+1<rows and obstacleGrid[i+1][j] != 1:
+                    bottom = dp[i+1][j]
+                ans = right + bottom
+                dp[i][j] = ans
+        return dp[0][0]
