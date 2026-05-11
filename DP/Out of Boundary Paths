@@ -1,0 +1,19 @@
+class Solution:
+    def findPaths(self, m: int, n: int, maxMove: int, startRow: int, startColumn: int) -> int:
+        dp = [[[-1 for i in range(n)] for j in range(m)] for k in range(maxMove+1)]
+        return self._get_num_paths(m,n,startRow,startColumn,maxMove,dp)
+
+    def _get_num_paths(self,m,n,i,j,k,dp):
+        if k>=0 and ((i>=m or i<0) or (j>=n or j<0)):
+            return 1
+        if k==0:
+            return 0
+        if dp[k][i][j] != -1:
+            return dp[k][i][j]
+        up = self._get_num_paths(m,n,i-1,j,k-1,dp)
+        down = self._get_num_paths(m,n,i+1,j,k-1,dp)
+        left = self._get_num_paths(m,n,i,j-1,k-1,dp)
+        right = self._get_num_paths(m,n,i,j+1,k-1,dp)
+        ans = (left + right + up + down)%(1000000007)
+        dp[k][i][j] = ans
+        return ans
