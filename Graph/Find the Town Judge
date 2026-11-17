@@ -1,0 +1,12 @@
+class Solution:
+    def findJudge(self, n: int, trust: List[List[int]]) -> int:
+        if len(trust) == 0 and n == 1: 
+            return 1
+        trust_factor = [0] * (n+1)
+        for t in trust:
+            trust_factor[t[0]] -= 1
+            trust_factor[t[1]] += 1
+
+        for tf in range(len(trust_factor)):
+            if trust_factor[tf] == n - 1: return tf
+        return -1
