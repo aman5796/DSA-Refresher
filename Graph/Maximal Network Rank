@@ -1,0 +1,22 @@
+class Solution:
+    def maximalNetworkRank(self, n: int, roads: list[list[int]]) -> int:
+        ans = -1
+        graph = {}
+        degree = [0]*n
+        for i in range(n):
+            graph[i] = []
+        for edge in roads:
+            u,v = edge
+            degree[u] += 1
+            degree[v] += 1
+            graph[u].append(v)
+            graph[v].append(u)
+        for i in range(n):
+            for j in range(n):
+                if i==j:
+                    continue
+                nw_rank = degree[i] + degree[j]
+                if i in graph[j]:
+                    nw_rank -= 1
+                ans = max(ans, nw_rank)
+        return ans
