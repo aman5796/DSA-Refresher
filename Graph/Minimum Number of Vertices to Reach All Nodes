@@ -1,0 +1,11 @@
+class Solution:
+    def findSmallestSetOfVertices(self, n: int, edges: list[list[int]]) -> list[int]:
+        ans = []
+        has_indegree = [False]*n
+        for edge in edges:
+            u,v = edge
+            has_indegree[v] = True
+        for i in range(n):
+            if not has_indegree[i]:
+                ans.append(i)
+        return ans
